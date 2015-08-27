@@ -9,6 +9,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../firebase-element/firebase-auth.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -33,13 +35,15 @@ Example:
 
   <template>
     <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
-    <input placeholder="email" value="{{email::input}}">
-    <input placeholder="password" value="{{password::input}}">
+
+    <paper-input label="Email" value="{{email}}"></paper-input>
+    <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+
     <div id="message">[[message]]</div>
     <br>
 
-    <button on-tap="_login">Login</button>
-    <button on-tap="_logout">Logout</button>
+    <paper-button on-tap="_login">Login</paper-button>
+    <paper-button on-tap="_logout">Logout</paper-button>
 
     <h3>Login status:</h3>
     <p>{{computeLoginStatus(statusKnown, user)}}</p>

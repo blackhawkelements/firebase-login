@@ -19,6 +19,8 @@
   ],
   "dependencies": {
     "firebase-element": "GoogleWebComponents/firebase-element#~1.0.3",
+    "paper-button": "polymerelements/paper-button#~1.0.3",
+    "paper-input": "polymerelements/paper-input#~1.0.12",
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "devDependencies": {
