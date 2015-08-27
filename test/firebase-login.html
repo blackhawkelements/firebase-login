@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../../promise-polyfill/promise-polyfill.html">
+    <link rel="import" href="test-helpers.html">
+    <!-- Step 1: import the element to test -->
+    <link rel="import" href="../firebase-login.html">
+  </head>
+  <body>
+
+    <!-- You can use the document as a place to set up your fixtures. -->
+    <firebase-login location="https://login-element.firebaseio.com"></firebase-login>
+
+    <script>
+      var myEl = document.querySelector('firebase-login');
+      var validEmail = 'user@test.com';
+      var validPassword = 'password';
+
+      suite('<firebase-login>', function() {
+
+        suite('properties', function() {
+          test('defines the "location" property', function() {
+            assert.equal(myEl.location, 'https://login-element.firebaseio.com');
+          });
+          test('defines the "email" property', function() {
+            assert.equal(myEl.email, '');
+          });
+          test('defines the "password" property', function() {
+            assert.equal(myEl.password, '');
+          });
+        });
+        
+        suite('when authenticating with valid email and password', function() {
+          teardown(function() {
+            myEl.logout();
+          });
+          test('login event is fired', function(done) {
+            waitForEvent(myEl, 'login').then(function() {
+              done();
+            });
+            myEl.email = validEmail;
+            myEl.password = validPassword;
+            myEl.login();
+          });
+        });
+
+        suite('after successful log in', function() {
+          setup(function(done) {
+            waitForEvent(myEl, 'login').then(function() {
+              done();
+            });
+            myEl.email = validEmail;
+            myEl.password = validPassword;
+            myEl.login();
+          });
+
+          teardown(function() {
+            myEl.logout();
+          });
+
+          test('property loggedIn is set to true', function() {
+            expect(myEl.loggedIn).to.be.equal(true);
+          });
+          test('and user object is populated', function() {
+            expect(myEl.user).to.not.equal(null);
+          });
+          test('and status is set to "logged in"', function() {
+            expect(myEl.loginStatus).to.equal('Logged in');
+          });
+          
+        });
+
+        suite('when logged in', function() {
+          setup(function(done) {
+            waitForEvent(myEl, 'login').then(function() {
+              done();
+            });
+            myEl.email = validEmail;
+            myEl.password = validPassword;
+            myEl.login();
+          });
+          test('we can log out and logout event is fired', function(done) {
+            waitForEvent(myEl, 'logout').then(function() {
+              done();
+            });
+            myEl.logout();
+          });
+        });
+
+        suite('after logging out', function() {
+          setup(function(done) {
+            waitForEvent(myEl, 'login').then(function() {
+              myEl.logout();
+            });
+            waitForEvent(myEl, 'logout').then(function() {
+              done();
+            });
+            myEl.email = validEmail;
+            myEl.password = validPassword;
+            myEl.login();
+          });
+          test('user is set to null', function() {
+            expect(myEl.user).to.equal(null);
+          });
+          test('and loggedIn is set to false', function() {
+            expect(myEl.loggedIn).to.be.equal(false);
+          });
+        });
+
+      });
+    </script>
+
+  </body>
+</html>
