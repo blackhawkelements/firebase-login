@@ -2,6 +2,7 @@
 <link rel="import" href="../firebase-element/firebase-auth.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
 
 <!--
 An element providing a solution to no problem in particular.
@@ -31,9 +32,10 @@ Example:
     <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
 
     <div class="layout vertical" hidden$="{{signedIn}}">
-      <paper-input label="Email" value="{{email}}"></paper-input>
-      <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+      <paper-input id="email" label="Email" value="{{email}}"></paper-input>
+      <paper-input id="password" label="Password" type="password" value="{{password}}"></paper-input>
       <div class="login-action-bar layout horizontal end-justified">
+        <iron-a11y-keys target="[[_target]]" keys="enter" on-keys-pressed="login"></iron-a11y-keys>
         <paper-button on-tap="login" raised>Login</paper-button>
       </div>
     </div>
@@ -108,6 +110,10 @@ Example:
         computed: 'computeSignedIn(statusKnown,user)',
         notify: true
       }
+    },
+
+    ready: function() {
+      this._target = this.$.password;
     },
 
     login: function() {
