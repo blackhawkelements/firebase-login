@@ -2,6 +2,7 @@
 <link rel="import" href="../firebase-element/firebase-auth.html">
 <link rel="import" href="../paper-input/paper-input.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
 <link rel="import" href="../iron-a11y-keys/iron-a11y-keys.html">
 
 <!--
@@ -26,24 +27,32 @@ Example:
     .login-action-bar {
       padding-top:10px;
     }
+    #message {
+      color: red;
+    }
   </style>
 
   <template>
-    <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
+    <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler" on-login="loginHandler" on-logout="logoutHandler"></firebase-auth>
 
-    <div class="layout vertical" hidden$="{{signedIn}}">
-      <paper-input id="email" label="Email" value="{{email}}"></paper-input>
-      <paper-input id="password" label="Password" type="password" value="{{password}}"></paper-input>
+    <div class="layout vertical">
+
+      <paper-spinner class="self-center" active$="{{checkingCredentials}}"></paper-spinner>
+      
+      <paper-input id="email" label="Email" value="{{email}}" disabled$="{{checkingCredentials}}"
+        hidden$="{{signedIn}}"></paper-input>
+      <paper-input id="password" label="Password" type="password" value="{{password}}" 
+        disabled$="{{checkingCredentials}}" hidden$="{{signedIn}}"></paper-input>
       <div class="login-action-bar layout horizontal end-justified">
         <iron-a11y-keys target="[[_target]]" keys="enter" on-keys-pressed="login"></iron-a11y-keys>
-        <paper-button on-tap="login" raised>Login</paper-button>
+        <paper-button on-tap="login" raised hidden$="{{computeLoginHidden(statusKnown, user)}}"
+          disabled$="{{checkingCredentials}}">Login</paper-button>
+        <paper-button on-tap="logout" raised hidden$="{{computeLogoutHidden(statusKnown, user)}}">Logout</paper-button>
       </div>
+      <div id="message">[[message]]</div>
     </div>
 
-    <div class="layout vertical" hidden$="{{!signedIn}}">
-      <span>Signed In</span>
-      <paper-button on-tap="logout" raised>Logout</paper-button>
-    </div>
+
     <!--
     <div id="message">[[message]]</div>
     <paper-button on-tap="logout">Logout</paper-button>
@@ -100,6 +109,10 @@ Example:
         type: Boolean
       },
 
+      checkingCredentials: {
+        type: Boolean
+      },
+
       loginStatus: {
         type: String,
         computed: 'computeLoginStatus(statusKnown, user)'
@@ -117,6 +130,8 @@ Example:
     },
 
     login: function() {
+      this.checkingCredentials = true;
+      this.message = '';
       this.$.firebaseLogin.login({email:this.email, password:this.password});
     },
 
@@ -124,8 +139,17 @@ Example:
       this.$.firebaseLogin.logout();
     },
 
-    _errorHandler: function(e) {
-      this.message = 'Error: ' + e.detail.message;
+    errorHandler: function(e) {
+      this.checkingCredentials = false;
+      this.message = e.detail.message;
+    },
+
+    loginHandler: function(e) {
+      this.checkingCredentials = false;
+    },
+
+    logoutHandler: function(e) {
+      this.checkingCredentials = false;
     },
 
     computeLoginStatus: function(statusKnown, user) {
@@ -138,6 +162,24 @@ Example:
       }
 
       return 'Unknown (checking status...)';
+    },
+    computeLoginHidden: function(statusKnown, user) {
+      return !statusKnown || !!user;
+    },
+    computeLogoutHidden: function(statusKnown, user) {
+      return !statusKnown || !user;
+    },
+
+    computeSpinnerActive: function(statusKnown, user) {
+      if (statusKnown && user) {
+        return false;
+      }
+
+      if (statusKnown) {
+        return false;
+      }
+
+      return true;
     },
 
     computeSignedIn: function(statusKnown, user) {

@@ -1,6 +1,6 @@
 {
   "name": "firebase-login",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "authors": [
     "Rob Beers"
   ],
@@ -22,6 +22,7 @@
     "iron-a11y-keys": "polymerelements/iron-a11y-keys#~1.0.2",
     "paper-button": "polymerelements/paper-button#~1.0.3",
     "paper-input": "polymerelements/paper-input#~1.0.12",
+    "paper-spinner": "PolymerElements/paper-spinner#~1.0.2",
     "polymer": "Polymer/polymer#^1.1.0"
   },
   "devDependencies": {
