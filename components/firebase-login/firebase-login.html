@@ -1,0 +1,151 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../firebase-element/firebase-auth.html">
+<link rel="import" href="../paper-input/paper-input.html">
+<link rel="import" href="../paper-button/paper-button.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <firebase-login></firebase-login>
+
+@group Seed Elements
+@element firebase-login
+@demo demo/index.html
+@hero hero.svg
+-->
+<dom-module id="firebase-login">
+
+  <style>
+    :host {
+      display: block;
+      box-sizing: border-box;
+    }
+    .login-action-bar {
+      padding-top:10px;
+    }
+  </style>
+
+  <template>
+    <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
+
+    <div class="layout vertical" hidden$="{{signedIn}}">
+      <paper-input label="Email" value="{{email}}"></paper-input>
+      <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+      <div class="login-action-bar layout horizontal end-justified">
+        <paper-button on-tap="login" raised>Login</paper-button>
+      </div>
+    </div>
+
+    <div class="layout vertical" hidden$="{{!signedIn}}">
+      <span>Signed In</span>
+      <paper-button on-tap="logout" raised>Logout</paper-button>
+    </div>
+    <!--
+    <div id="message">[[message]]</div>
+    <paper-button on-tap="logout">Logout</paper-button>
+
+    <h3>Login status:</h3>
+    <p>{{computeLoginStatus(statusKnown, user)}}</p>
+
+    <h3>User ID:</h3>
+    <pre>{{user.uid}}</pre>
+    -->
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'firebase-login',
+
+    properties: {
+
+      location: {
+        type: String,
+        value: ''
+      },
+
+      provider: {
+        type: String,
+        value: 'password'
+      },
+
+      message: {
+        type: String,
+        value: ''
+      },
+
+      email: {
+        type: String,
+        value: ''
+      },
+
+      password: {
+        type: String,
+        value: ''
+      },
+
+      user: {
+        type: Object,
+        value: null
+      },
+
+      statusKnown: {
+        type: Boolean
+      },
+
+      loginStatus: {
+        type: String,
+        computed: 'computeLoginStatus(statusKnown, user)'
+      },
+
+      signedIn: {
+        type:Boolean,
+        computed: 'computeSignedIn(statusKnown,user)',
+        notify: true
+      }
+    },
+
+    login: function() {
+      this.$.firebaseLogin.login({email:this.email, password:this.password});
+    },
+
+    logout: function() {
+      this.$.firebaseLogin.logout();
+    },
+
+    _errorHandler: function(e) {
+      this.message = 'Error: ' + e.detail.message;
+    },
+
+    computeLoginStatus: function(statusKnown, user) {
+      if (statusKnown && user) {
+        return 'Logged in';
+      }
+
+      if (statusKnown) {
+        return 'Logged out';
+      }
+
+      return 'Unknown (checking status...)';
+    },
+
+    computeSignedIn: function(statusKnown, user) {
+      if (statusKnown && user) {
+        return true;
+      }
+
+      if (statusKnown) {
+        return false;
+      }
+
+      return false;
+    }
+
+  });
+
+</script>

@@ -1,0 +1,41 @@
+{
+  "name": "firebase-login",
+  "authors": [
+    "Anonymous <anonymous@example.com>"
+  ],
+  "description": "An element providing a solution to no problem in particular.",
+  "keywords": [
+    "web-component",
+    "polymer",
+    "seed"
+  ],
+  "main": "firebase-login.html",
+  "license": "http://polymer.github.io/LICENSE.txt",
+  "homepage": "https://github.com/<USERNAME>/seed-element/",
+  "ignore": [
+    "/.*",
+    "/test/"
+  ],
+  "dependencies": {
+    "firebase-element": "GoogleWebComponents/firebase-element#~1.0.3",
+    "paper-button": "polymerelements/paper-button#~1.0.3",
+    "paper-input": "polymerelements/paper-input#~1.0.12",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "promise-polyfill": "polymerlabs/promise-polyfill#^1.0.0",
+    "test-fixture": "polymerelements/test-fixture#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "becf023d8f",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "becf023d8f7ff493e687244ddcc057db329c0668"
+  },
+  "_source": "git://github.com/blackhawkelements/firebase-login.git",
+  "_target": "master",
+  "_originalSource": "blackhawkelements/firebase-login",
+  "_direct": true
+}
