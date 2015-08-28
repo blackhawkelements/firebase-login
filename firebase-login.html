@@ -22,18 +22,28 @@ Example:
       display: block;
       box-sizing: border-box;
     }
+    .login-action-bar {
+      padding-top:10px;
+    }
   </style>
 
   <template>
     <firebase-auth id="firebaseLogin" user="{{user}}" status-known="{{statusKnown}}" location="{{location}}" provider="{{provider}}" on-error="errorHandler"></firebase-auth>
 
-    <paper-input label="Email" value="{{email}}"></paper-input>
-    <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+    <div class="layout vertical" hidden$="{{signedIn}}">
+      <paper-input label="Email" value="{{email}}"></paper-input>
+      <paper-input label="Password" type="password" value="{{password}}"></paper-input>
+      <div class="login-action-bar layout horizontal end-justified">
+        <paper-button on-tap="login" raised>Login</paper-button>
+      </div>
+    </div>
 
+    <div class="layout vertical" hidden$="{{!signedIn}}">
+      <span>Signed In</span>
+      <paper-button on-tap="logout" raised>Logout</paper-button>
+    </div>
+    <!--
     <div id="message">[[message]]</div>
-    <br>
-
-    <paper-button on-tap="login">Login</paper-button>
     <paper-button on-tap="logout">Logout</paper-button>
 
     <h3>Login status:</h3>
@@ -41,6 +51,7 @@ Example:
 
     <h3>User ID:</h3>
     <pre>{{user.uid}}</pre>
+    -->
   </template>
 
 </dom-module>
@@ -92,9 +103,10 @@ Example:
         computed: 'computeLoginStatus(statusKnown, user)'
       },
 
-      loggedIn: {
+      signedIn: {
         type:Boolean,
-        computed: 'computeLoggedIn(statusKnown,user)'
+        computed: 'computeSignedIn(statusKnown,user)',
+        notify: true
       }
     },
 
@@ -122,7 +134,7 @@ Example:
       return 'Unknown (checking status...)';
     },
 
-    computeLoggedIn: function(statusKnown, user) {
+    computeSignedIn: function(statusKnown, user) {
       if (statusKnown && user) {
         return true;
       }

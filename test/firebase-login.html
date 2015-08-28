@@ -65,8 +65,8 @@
             myEl.logout();
           });
 
-          test('property loggedIn is set to true', function() {
-            expect(myEl.loggedIn).to.be.equal(true);
+          test('property signedIn is set to true', function() {
+            expect(myEl.signedIn).to.be.equal(true);
           });
           test('and user object is populated', function() {
             expect(myEl.user).to.not.equal(null);
@@ -109,8 +109,8 @@
           test('user is set to null', function() {
             expect(myEl.user).to.equal(null);
           });
-          test('and loggedIn is set to false', function() {
-            expect(myEl.loggedIn).to.be.equal(false);
+          test('and signedIn is set to false', function() {
+            expect(myEl.signedIn).to.be.equal(false);
           });
         });
 
